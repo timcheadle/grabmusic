@@ -155,15 +155,17 @@ sub send_packets {
 #            ($SongId)     = map {&txtdecode($_)} $MetaData =~ /\<SongId\>(.+)\<\/SongId/;
             ($SongLength) = map {&txtdecode($_)} $MetaData =~ /\<length\>(.+)\<\/length\>/;
 #            ($Serial)     = map {&txtdecode($_)} $MetaData =~ /\<Serial\>(.+)\<\/Serial/;
-	    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
-	    print "Time       = $mon/$mday/$year $hour:$min:$sec\n"; 
+             $SongLength /= 1000;  # time is msec
+             my $length_min = int($SongLength / 60);
+             my $length_sec = $SongLength % 60;
+            print "Time       = " . scalar(localtime(time())) . "\n";
             print "ArtistName = $ArtistName\n";
             print "AlbumName  = $AlbumName\n";
             print "SongName   = $SongName\n";
             print "Soon       = $Soon\n";
             print "AlbumArt   = $AlbumArt\n";
 #            print "SongId     = $SongId\n";
-            print "SongLength = $SongLength\n";
+            print "SongLength = $length_min:$length_sec";
 #            print "Serial     = $Serial\n";
             print "\n";
           }
