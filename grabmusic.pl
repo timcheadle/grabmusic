@@ -86,7 +86,7 @@ sub send_packets {
   my $select     = IO::Select->new();
   my($data, $socket, $sendata, $null, $msgclass, $msgtype, $SongLength);
   my($header, $sync, $qos, $msg, $len, $strmdata, $line, $SongId, $Serial);
-  my($SongName, $AlbumName, $ArtistName, $MetaData, $Soon, $AlbumArt);
+  my($SongName, $AlbumName, $ArtistName, $MetaData, $Soon, $AlbumArt, $iTunesSong);
   print "Opening socket\n" if $verbose > 1;
   $recv_size = 400 if($player);
   $socket = IO::Socket::INET->new(PeerAddr => $ip,
@@ -153,19 +153,21 @@ sub send_packets {
             ($Soon)       = map {&txtdecode($_)} $MetaData =~ /\<soon\>(.+)\<\/soon/;
 #            ($SongId)     = map {&txtdecode($_)} $MetaData =~ /\<SongId\>(.+)\<\/SongId/;
             ($SongLength) = map {&txtdecode($_)} $MetaData =~ /\<length\>(.+)\<\/length\>/;
+            ($iTunesSong) = map {&txtdecode($_)} $MetaData =~ /\<itunes_song_id\>(.+)\<\/itunes_song_id\>/;
 #            ($Serial)     = map {&txtdecode($_)} $MetaData =~ /\<Serial\>(.+)\<\/Serial/;
              $SongLength /= 1000;  # time is msec
              my $length_min = int($SongLength / 60);
              my $length_sec = $SongLength % 60;
-            print "Time       = " . scalar(localtime(time())) . "\n";
-            print "ArtistName = $ArtistName\n";
-            print "AlbumName  = $AlbumName\n";
-            print "SongName   = $SongName\n";
-            print "Soon       = $Soon\n";
-            print "AlbumArt   = $AlbumArt\n";
-#            print "SongId     = $SongId\n";
-            print "SongLength = $length_min:$length_sec";
-#            print "Serial     = $Serial\n";
+            print "Time        = " . scalar(localtime(time())) . "\n";
+            print "ArtistName  = $ArtistName\n";
+            print "AlbumName   = $AlbumName\n";
+            print "SongName    = $SongName\n";
+            print "Soon        = $Soon\n";
+            print "AlbumArt    = $AlbumArt\n";
+#            print "SongId      = $SongId\n";
+            print "SongLength  = $length_min:$length_sec\n";
+            print "iTunes Song = $iTunesSong\n";
+#            print "Serial      = $Serial\n";
             print "\n";
           }
           if($recorder) {
