@@ -67,7 +67,7 @@ sub printhelp {
   }
   print "Usage: $progname -r|-p [-h] host streamID\n";
   print "  Options: -r   Tells program to record song to a file.\n";
-  print "           -p   Tells program to play song via splay.\n";
+  print "           -p   Tells program to play song via mpg321.\n";
   print "           -d   Which directory to save files int, defaults to\n";
   print "                current working directory.\n";
   print "           -s   Save files in ArtistName/AlbumName/ directories\n";
@@ -145,14 +145,15 @@ sub send_packets {
             $select->remove($playpipe);
             $playpipe->close();
           }
-          ($SongName)   = map {&txtdecode($_)} $MetaData =~ /\<SongName\>(.+)\<\/SongName/;
-          ($AlbumName)  = map {&txtdecode($_)} $MetaData =~ /\<AlbumName\>(.+)\<\/AlbumName/;
-          ($ArtistName) = map {&txtdecode($_)} $MetaData =~ /\<ArtistName\>(.+)\<\/ArtistName/;
-          ($AlbumArt)   = map {&txtdecode($_)} $MetaData =~ /\<AlbumArt\>(.+)\<\/AlbumArt/;
+          print "$MetaData\n";
+          ($SongName)   = map {&txtdecode($_)} $MetaData =~ /\<name\>(.+)\<\/name\>/;
+          ($AlbumName)  = map {&txtdecode($_)} $MetaData =~ /\<album\>(.+)\<\/album\>/;
+          ($ArtistName) = map {&txtdecode($_)} $MetaData =~ /\<artist\>(.+)\<\/artist\>/;
+          ($AlbumArt)   = map {&txtdecode($_)} $MetaData =~ /\<album_art\>(.+)\<\/album_art\>/;
           if($verbose) {
-            ($Soon)       = map {&txtdecode($_)} $MetaData =~ /\<Soon\>(.+)\<\/Soon/;
+            ($Soon)       = map {&txtdecode($_)} $MetaData =~ /\<soon\>(.+)\<\/soon/;
 #            ($SongId)     = map {&txtdecode($_)} $MetaData =~ /\<SongId\>(.+)\<\/SongId/;
-#            ($SongLength) = map {&txtdecode($_)} $MetaData =~ /\<SongLength\>(.+)\<\/SongLength/;
+            ($SongLength) = map {&txtdecode($_)} $MetaData =~ /\<length\>(.+)\<\/length\>/;
 #            ($Serial)     = map {&txtdecode($_)} $MetaData =~ /\<Serial\>(.+)\<\/Serial/;
 	    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
 	    print "Time       = $mon/$mday/$year $hour:$min:$sec\n"; 
@@ -162,7 +163,7 @@ sub send_packets {
             print "Soon       = $Soon\n";
             print "AlbumArt   = $AlbumArt\n";
 #            print "SongId     = $SongId\n";
-#            print "SongLength = $SongLength\n";
+            print "SongLength = $SongLength\n";
 #            print "Serial     = $Serial\n";
             print "\n";
           }
@@ -223,7 +224,7 @@ if(-e $filename) { unlink $filename; }
             }
           }
           if($player) {
-            $playpipe = new IO::File "|splay -M >/dev/null 2>&1";
+            $playpipe = new IO::File "|mpg321 - >/dev/null 2>&1";
             $playpipe->autoflush;
             $select->add($playpipe);
           }
