@@ -145,7 +145,6 @@ sub send_packets {
             $select->remove($playpipe);
             $playpipe->close();
           }
-          print "$MetaData\n";
           ($SongName)   = map {&txtdecode($_)} $MetaData =~ /\<name\>(.+)\<\/name\>/;
           ($AlbumName)  = map {&txtdecode($_)} $MetaData =~ /\<album\>(.+)\<\/album\>/;
           ($ArtistName) = map {&txtdecode($_)} $MetaData =~ /\<artist\>(.+)\<\/artist\>/;
