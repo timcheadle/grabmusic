@@ -67,7 +67,7 @@ sub printhelp {
   }
   print "Usage: $progname -r|-p [-h] host streamID\n";
   print "  Options: -r   Tells program to record song to a file.\n";
-  print "           -p   Tells program to play song via mpg321.\n";
+  print "           -p   Tells program to play song via mpg123.\n";
   print "           -d   Which directory to save files int, defaults to\n";
   print "                current working directory.\n";
   print "           -s   Save files in ArtistName/AlbumName/ directories\n";
@@ -227,7 +227,7 @@ if(-e $filename) { unlink $filename; }
             }
           }
           if($player) {
-            $playpipe = new IO::File "|mpg321 - >/dev/null 2>&1";
+            $playpipe = new IO::File "|mpg123 - >/dev/null 2>&1";
             $playpipe->autoflush;
             $select->add($playpipe);
           }
